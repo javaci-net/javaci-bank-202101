@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 	
-	<th:block th:insert="/common.html :: head('Page2')"></th:block>
+	<th:block th:insert="common.html :: head('Page2')"></th:block>
 	
     <body class="sb-nav-fixed">
     
-    	<th:block th:insert="/common.html :: top_menu"></th:block>
+    	<th:block th:insert="common.html :: top_menu"></th:block>
         
         <div id="layoutSidenav">
             
-            <th:block th:insert="/common.html :: left_menu"></th:block>
+            <th:block th:insert="common.html :: left_menu"></th:block>
             
             <div id="layoutSidenav_content">
                 <main>
@@ -19,9 +19,9 @@
                     </div>
                 </main>
                 
-                 <th:block th:insert="/common.html :: footer"></th:block>
+                 <th:block th:insert="common.html :: footer"></th:block>
             </div>
         </div>
-        <th:block th:insert="/common.html :: script"></th:block>
+        <th:block th:insert="common.html :: script"></th:block>
     </body>
 </html>
