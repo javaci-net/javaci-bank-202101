@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class JavaciBankBackofficeApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(JavaciBankBackofficeApplication.class, args);
+		SpringApplication.run(JavaciBankBackofficeApplication.class, args); 
 	}
 
 }
