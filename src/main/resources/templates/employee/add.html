@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:insert="common.html :: head('Employee Add')"></th:block>
+
+
+<body class="sb-nav-fixed">
+
+	<th:block th:insert="common.html :: top_menu"></th:block>
+
+	<div id="layoutSidenav">
+
+		<th:block th:insert="common.html :: left_menu"></th:block>
+
+		<div id="layoutSidenav_content">
+			<main>
+				<div class="container">
+					<div class="row justify-content-center">
+						<div class="col-lg-7">
+							<div class="card shadow-lg border-0 rounded-lg mt-5">
+								<div class="card-header">
+									<h3 class="text-center font-weight-light my-4"
+										th:text="#{employee.create}"></h3>
+								</div>
+								<div class="card-body">
+									<form th:action="@{/employee/add}" th:object="${employeeDto}"
+										method="post" class="needs-validation" novalidate>
+
+										<div class="form-group" id="citizenNumberGroup">
+											<label class="small mb-1" for="inputCitizenNumber"
+												th:text="#{employee.citizenNumber}"> </label> <input
+												id="citizenNumberInput" class="form-control py-4"
+												type="text"
+												th:placeholder="#{employee.citizenNumber.placeholder}"
+												th:field="*{citizenNumber}" required />
+
+											<div id="citizenNumberError" class="invalid-feedback"
+												th:text="#{employee.citizenNumber.required}"></div>
+
+										</div>
+
+										<div class="form-row">
+											<div class="col-md-4">
+												<div class="form-group">
+													<label class="small mb-1" for="inputFirstName"
+														th:text="#{employee.firstName}"></label> <input
+														class="form-control py-4" id="inputFirstName" type="text"
+														th:placeholder="#{employee.firstName.placeholder}"
+														th:field="*{firstName}" required />
+													<div class="invalid-feedback"
+														th:text="#{employee.firstName.required}"></div>
+												</div>
+											</div>
+
+											<div class="col-md-4">
+												<div class="form-group">
+													<label class="small mb-1" for="inputMiddleName"
+														th:text="#{employee.middleName}"></label> <input
+														class="form-control py-4" id="inputMiddleName" type="text"
+														th:placeholder="#{employee.middleName.placeholder}"
+														th:field="*{middleName}" />
+												</div>
+											</div>
+
+											<div class="col-md-4">
+												<div class="form-group">
+													<label class="small mb-1" for="inputLastName"
+														th:text="#{employee.lastName}"></label> <input
+														class="form-control py-4" id="inputLastName" type="text"
+														th:placeholder="#{employee.lastName.placeholder}"
+														th:field="*{lastName}" required />
+													<div class="invalid-feedback"
+														th:text="#{employee.lastName.required}"></div>
+												</div>
+											</div>
+										</div>
+
+										<div class="form-row">
+											<div class="col-md-8">
+												<div class="form-group">
+													<label class="small mb-1" for="inputEmailAddress"
+														th:text="#{employee.email}"></label> <input
+														class="form-control py-4" id="inputEmailAddress"
+														type="email" aria-describedby="emailHelp"
+														th:placeholder="#{employee.email.placeholder}"
+														th:field="*{email}" required
+														 />
+													<div class="invalid-feedback"
+														th:text="#{employee.email.required}"></div>
+												</div>
+											</div>
+											<div class="col-md-4">
+												<label class="small mb-1" for="selectStatus"
+													th:text="#{employee.status}"></label> <select name="status"
+													class="form-control" id="selectStatus" th:field="*{status}"
+													required>
+													<option value="" th:text="#{common.select}"></option>
+													<option
+														th:each="status : ${T(net.javaci.bank202101.db.model.enumaration.EmployeeStatusType).values()}"
+														th:value="${status}" th:text="${status}"></option>
+												</select>
+												<div class="invalid-feedback"
+													th:text="#{employee.status.required}"></div>
+											</div>
+										</div>
+										
+										<div class="form-row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="small mb-1" for="inputPhoneNumber"
+														th:text="#{employee.phoneNumber}"></label> <input
+														class="form-control py-4" id="inputPhoneNumber" type="text"
+														th:placeholder="#{employee.phoneNumber.placeholder}"
+														th:field="*{phoneNumber}" />
+												</div>
+											</div>
+								
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="small mb-1" for="inputBirthDate"
+														th:text="#{employee.birthDate}"></label> <input
+														class="form-control py-4" id="inputBirthDate" type="date"
+														th:field="*{birthDate}" required />
+													<div class="invalid-feedback"
+														th:text="#{employee.birthDate.required}"></div>
+												</div>
+											</div>
+										</div>
+										
+										<div class="form-row" >
+											<div class="col-md-6">
+												<label class="small mb-1" for="selectRole"
+													th:text="#{employee.role}"></label> <select name="role"
+													class="form-control" id="selectRole" th:field="*{role}"
+													required>
+													<option value="" th:text="#{common.select}"></option>
+													<option
+														th:each="role : ${T(net.javaci.bank202101.db.model.enumaration.EmployeeRoleType).values()}"
+														th:value="${role}" th:text="${role}"></option>
+												</select>
+												<div class="invalid-feedback" th:text="#{employee.status.required}"></div>
+											</div>
+										</div>
+										
+										<div class="form-row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="small mb-1" for="inputPassword"
+														th:text="#{employee.password}"></label> <input
+														class="form-control py-4" id="inputPassword" type="password"
+														th:placeholder="#{employee.password.placeholder}"
+														th:field="*{password}" required />
+													<div class="invalid-feedback"
+														th:text="#{employee.password.required}"></div>
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="form-group">
+													<label class="small mb-1" for="inputConfirmPassword"
+														th:text="#{employee.confirmPassword}"></label> <input
+														class="form-control py-4" id="inputConfirmPassword"
+														type="password"
+														th:placeholder="#{employee.confirmPassword.placeholder}"
+														th:field="*{confirmPassword}" required />
+													<div class="invalid-feedback"
+														th:text="#{employee.confirmPassword.required}"></div>
+							
+												</div>
+											</div>
+										</div>
+								
+
+										<div class="form-group mt-4 mb-0">
+											<button class="btn btn-primary btn-block"
+												th:text="#{employee.create}"></button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</main>
+
+			<th:block th:insert="common.html :: footer"></th:block>
+		</div>
+	</div>
+	<th:block th:insert="common.html :: script"></th:block>
+
+</body>
+</html>

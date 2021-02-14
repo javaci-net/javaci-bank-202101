@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+	<th:block th:insert="common.html :: head('Employee List')"></th:block>
+	
+	
+    <body class="sb-nav-fixed">
+    
+    	<th:block th:insert="common.html :: top_menu"></th:block>
+        
+        <div id="layoutSidenav">
+            
+            <th:block th:insert="common.html :: left_menu"></th:block>
+            
+            <div id="layoutSidenav_content">
+                <main>
+                    <div class="container-fluid">
+                        <div class="card mb-4">
+						<div class="card-header">
+							<i class="fas fa-table mr-1"></i> <span th:text="#{employees}"></span>
+						</div>
+						<div class="card-body">
+							<a  href="/employee/add" class="button" 
+								th:text="#{employee.createNew}"></a> <br />
+							<br />
+							<div class="table-responsive">
+								<div th:text="#{common	.emptyTable}"
+									th:if="${customers?.isEmpty()}"></div>
+								<table class="table table-bordered" id="dataTable" width="100%"
+									cellspacing="0" th:if="${not employees?.isEmpty()}">
+									<thead>
+										<tr>
+											<th>ID</th>
+											<th th:text="#{employee.citizenNumber}"></th>
+											<th th:text="#{employee.firstName}"></th>
+											<th th:text="#{employee.middleName}"></th>
+											<th th:text="#{employee.lastName}"></th>
+											<th th:text="#{employee.birthDate}"></th>
+											<th th:text="#{employee.email}"></th>
+											<th th:text="#{employee.phoneNumber}"></th>
+											<th th:text="#{employee.status}"></th>
+											<th th:text="#{employee.role}"></th>
+											<th th:text="#{employee.update}" ></th>
+										</tr>
+									</thead>
+									<tbody>
+										<div th:remove="tag" th:each="e : ${employees}" class="card">
+											<tr>
+												<td th:text="${e.id}"></td>
+												<td th:text="${e.citizenNumber}"></td>
+												<td th:text="${e.firstName}"></td>
+												<td th:text="${e.middleName}"></td>
+												<td th:text="${e.lastName}"></td>
+												<td th:text="${#temporals.format(e.birthDate, date_format)}"></td>
+												<td th:text="${e.email}"></td>
+												<td th:text="${e.phoneNumber}"></td>
+												<td th:text="${e.status}"></td>
+												<td th:text="${e.role}"></td>
+												<td >
+													<a th:href="'/employee/update/' + ${e.id}" th:text="#{employee.update}" ></a>
+												</td>
+											</tr>
+										</div>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+                    </div>
+                </main>
+                
+                 <th:block th:insert="common.html :: footer"></th:block>
+            </div>
+        </div>
+        <th:block th:insert="common.html :: script"></th:block>
+        
+    </body>
+</html>
