@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<body>
+	<div th:fragment="form(includer)">
+		<div class="form-group" id="citizenNumberGroup">
+			<label class="small mb-1" for="inputCitizenNumber"
+				th:text="#{employee.citizenNumber}"> </label> <input
+				id="citizenNumberInput" class="form-control py-4" type="text"
+				th:placeholder="#{employee.citizenNumber.placeholder}"
+				th:field="*{citizenNumber}" required
+				th:readonly="${includer == 'update'} ? true : false" />
+
+			<div id="citizenNumberError" class="invalid-feedback"
+				th:text="#{employee.citizenNumber.required}"></div>
+
+		</div>
+
+		<div class="form-row">
+			<div class="col-md-4">
+				<div class="form-group">
+					<label class="small mb-1" for="inputFirstName"
+						th:text="#{employee.firstName}"></label> <input
+						class="form-control py-4" id="inputFirstName" type="text"
+						th:placeholder="#{employee.firstName.placeholder}"
+						th:field="*{firstName}" minlength="3" maxlength="15" required />
+					<div class="invalid-feedback"
+						th:text="#{employee.firstName.required}"></div>
+				</div>
+			</div>
+
+			<div class="col-md-4">
+				<div class="form-group">
+					<label class="small mb-1" for="inputMiddleName"
+						th:text="#{employee.middleName}"></label> <input
+						class="form-control py-4" id="inputMiddleName" type="text"
+						th:placeholder="#{employee.middleName.placeholder}"
+						th:field="*{middleName}" />
+				</div>
+			</div>
+
+			<div class="col-md-4">
+				<div class="form-group">
+					<label class="small mb-1" for="inputLastName"
+						th:text="#{employee.lastName}"></label> <input
+						class="form-control py-4" id="inputLastName" type="text"
+						th:placeholder="#{employee.lastName.placeholder}"
+						th:field="*{lastName}" required />
+					<div class="invalid-feedback"
+						th:text="#{employee.lastName.required}"></div>
+				</div>
+			</div>
+		</div>
+
+		<div class="form-row">
+			<div class="col-md-8">
+				<div class="form-group">
+					<label class="small mb-1" for="inputEmailAddress"
+						th:text="#{employee.email}"></label> <input
+						class="form-control py-4" id="inputEmailAddress" type="email"
+						aria-describedby="emailHelp"
+						th:placeholder="#{employee.email.placeholder}" th:field="*{email}"
+						required th:readonly="${includer == 'update'} ? true : false" />
+					<div class="invalid-feedback" th:text="#{employee.email.required}"></div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<label class="small mb-1" for="selectStatus"
+					th:text="#{employee.status}"></label> <select name="status"
+					class="form-control" id="selectStatus" th:field="*{status}"
+					required>
+					<option value="" th:text="#{common.select}"></option>
+					<option
+						th:each="status : ${T(net.javaci.bank202101.db.model.enumaration.EmployeeStatusType).values()}"
+						th:value="${status}" th:text="${status}"></option>
+				</select>
+				<div class="invalid-feedback" th:text="#{employee.status.required}"></div>
+			</div>
+		</div>
+
+		<div class="form-row">
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="small mb-1" for="inputPhoneNumber"
+						th:text="#{employee.phoneNumber}"></label> <input
+						class="form-control py-4" id="inputPhoneNumber" type="text"
+						th:placeholder="#{employee.phoneNumber.placeholder}"
+						th:field="*{phoneNumber}" />
+				</div>
+			</div>
+
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="small mb-1" for="inputBirthDate"
+						th:text="#{employee.birthDate}"></label> <input
+						class="form-control py-4" id="inputBirthDate" type="date"
+						th:field="*{birthDate}" required />
+					<div class="invalid-feedback"
+						th:text="#{employee.birthDate.required}"></div>
+				</div>
+			</div>
+		</div>
+
+		<div class="form-row">
+			<div class="col-md-6">
+				<label class="small mb-1" for="selectRole"
+					th:text="#{employee.role}"></label> <select name="role"
+					class="form-control" id="selectRole" th:field="*{role}" required>
+					<option value="" th:text="#{common.select}"></option>
+					<option
+						th:each="role : ${T(net.javaci.bank202101.db.model.enumaration.EmployeeRoleType).values()}"
+						th:value="${role}" th:text="${role}"></option>
+				</select>
+				<div class="invalid-feedback" th:text="#{employee.status.required}"></div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
