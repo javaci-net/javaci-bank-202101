@@ -38,6 +38,7 @@
                 <a class="dropdown-item" href="#">Activity Log</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="login.html">Logout</a>
+               
             </div>
         </li>
     </ul>
@@ -112,7 +113,10 @@
 				<a class="nav-link" th:href="@{/logout}">
 					<div class="sb-nav-link-icon">
 						<i class="fas fa-chart-area"></i>
-					</div> <span th:text="#{menu.logout}"></span>
+					</div> 
+					<form name="logoutForm" th:action="@{/cikis}" method="post">
+						<input type="submit" th:value="#{menu.logout}">
+					</form>
 				</a>
 
 			</div>
