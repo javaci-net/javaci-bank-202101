@@ -18,7 +18,6 @@ public class MyUserDetailService  implements UserDetailsService {
 	@Autowired
 	private EmployeeDao employeeDao;
 	
-	
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		Employee emp = employeeDao.findByEmail(email);
@@ -28,8 +27,5 @@ public class MyUserDetailService  implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(emp.getEmail(),
                 emp.getPassword(),
                 Arrays.asList( new SimpleGrantedAuthority(emp.getRole().name())));
-        
 	}
-	
-
 }

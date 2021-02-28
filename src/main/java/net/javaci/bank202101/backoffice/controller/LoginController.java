@@ -24,7 +24,7 @@ public class LoginController {
 		
 		restoreDBService.checkEmptyDB();
 		
-		return "login";
+		return "user/login";
 	}
 	
 }

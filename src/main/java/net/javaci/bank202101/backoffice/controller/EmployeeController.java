@@ -24,7 +24,7 @@ import net.javaci.bank202101.db.model.Employee;
 
 @Controller
 @RequestMapping("/employee")
-public class EmployeeController {
+public class EmployeeController extends AbstractController {
 
 	@Autowired
 	private EmployeeDao employeeDao;
@@ -46,6 +46,10 @@ public class EmployeeController {
 	@PostMapping("/add")
 	public String addEmployee(@ModelAttribute @Validated EmployeeDto employeeDto, BindingResult bindingResult,
 			Model model) {
+		
+		if (!canModifyData()) {
+			return "error/notAdminError";
+		}
 
 		if (bindingResult.hasErrors() || !employeeDto.getConfirmPassword().equals(employeeDto.getPassword())) {
 			model.addAttribute("errorMessage", bindingResult.getAllErrors().get(0).getDefaultMessage());
@@ -62,6 +66,11 @@ public class EmployeeController {
 
 	@GetMapping("/update/{id}")
 	public String renderUpdatePage(Model model, @PathVariable("id") Long id) {
+		
+		if (!canModifyData() && !isLogginUser(id)) {
+			return "error/notAdminError";
+		}
+		
 
 		Employee employeeEntity = employeeDao.findById(id).get();
 		EmployeeDto employeeDto = new EmployeeDto();
