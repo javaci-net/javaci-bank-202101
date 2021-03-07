@@ -19,7 +19,7 @@ public class AccountApi {
     public static final String API_ACCOUNT_BASE_URL = "/api/account";
 
     @GetMapping("/list")
-    public List<Object> listAll(){
+    public List<AccountListDto> listAll(){
         Customer customer = null;
         return null;
     }
