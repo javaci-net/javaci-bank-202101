@@ -8,4 +8,6 @@ public interface CustomerDao {
 
     Optional<Customer> findByCitizenNumber(String citizenNumber);
 
+    void save(Customer customer);
+
 }

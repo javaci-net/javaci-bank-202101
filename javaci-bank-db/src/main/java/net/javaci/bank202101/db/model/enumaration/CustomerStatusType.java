@@ -4,5 +4,9 @@ public enum CustomerStatusType {
 
     ACTIVE,
     INACTIVE,
-    UNAPPROVED
+    UNAPPROVED;
+
+    public static CustomerStatusType fromStr(String status) {
+        return CustomerStatusType.valueOf(status.toUpperCase());
+    }
 }

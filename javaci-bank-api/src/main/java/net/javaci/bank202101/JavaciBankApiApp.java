@@ -24,7 +24,7 @@ public class JavaciBankApiApp {
             }
         }
     }
-    
+
     @Bean
     public ModelMapper modelMapper() {
         final ModelMapper modelMapper = new ModelMapper();
