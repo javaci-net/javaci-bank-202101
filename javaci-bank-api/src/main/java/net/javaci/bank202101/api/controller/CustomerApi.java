@@ -88,7 +88,7 @@ public class CustomerApi {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                  "Given citizen number not found " + citizenNumber
             );
-         }
+        }
         return modelMapper.map(existingCustomer.get(), CustomerListDto.class);
     }
 }
