@@ -1,6 +1,7 @@
 package net.javaci.bank202101.api.controller;
 
 import java.security.Principal;
+import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import net.javaci.bank202101.api.dto.CustomerListDto;
 import net.javaci.bank202101.api.dto.CustomerSaveDto;
+import net.javaci.bank202101.db.dao.CustomerDao;
 import net.javaci.bank202101.db.model.Customer;
 
 @RestController
@@ -22,12 +24,16 @@ public class CustomerApi {
     static final String API_CUSTOMER_BASE_URL = "/api/customer";
 
     @Autowired
+    private CustomerDao customerDao;
+    
+    @Autowired
     private ModelMapper modelMapper;
     
     @PostMapping("/register")
     private Long add(@RequestBody CustomerSaveDto customerSaveDto) {
         
-        Customer customer = modelMapper.map(customerSaveDto, Customer.class);
+        Optional<Customer> customer = customerDao.findByCitizenNumber(customerSaveDto.getCitizenNumber());
+        
         
         return null;
     }
