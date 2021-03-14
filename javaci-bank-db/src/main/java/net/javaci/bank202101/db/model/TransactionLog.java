@@ -1,6 +1,7 @@
 package net.javaci.bank202101.db.model;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,49 +12,37 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.javaci.bank202101.db.model.enumaration.AccountCurrency;
-import net.javaci.bank202101.db.model.enumaration.AccountStatusType;
+import net.javaci.bank202101.db.model.enumaration.TransactionLogType;
 
 @Entity
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor
-public class Account {
-
-    public Account(Long accountId) {
-        this.id = id;
-    }
+@Getter @Setter
+public class TransactionLog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
     @ManyToOne
-    private Customer customer;
+    private Account account;
     
-    /*--
-    @OneToMany(mappedBy = "account")
-    private Set<TransactionLog> transactions;
-    */
+    @ManyToOne
+    private Account toAccount;
     
     @Column(nullable = false)
-    private String accountNumber;
-    
-    @Column(nullable = false)
-    private String accountName;
-    
-    private String description;
+    private BigDecimal amount;
     
     @Column(nullable = false)
     private BigDecimal balance;
     
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private AccountCurrency currency;
+    private TransactionLogType type;
     
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private AccountStatusType status;
+    private LocalDate date;
+    
+    private String description;
+    
 }
