@@ -1,11 +1,11 @@
 package net.javaci.bank202101.api.controller;
 
-import java.security.Principal;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +20,6 @@ import net.javaci.bank202101.api.dto.CustomerListDto;
 import net.javaci.bank202101.api.dto.CustomerSaveDto;
 import net.javaci.bank202101.db.dao.CustomerDao;
 import net.javaci.bank202101.db.model.Customer;
-import net.javaci.bank202101.db.model.enumaration.CustomerStatusType;
 
 @Slf4j
 @RestController
@@ -35,6 +34,9 @@ public class CustomerApi {
     @Autowired
     private ModelMapper modelMapper;
     
+    @Autowired
+    private PasswordEncoder passwordEncoder; 
+    
     @PostMapping("/register")
     private Long add(@RequestBody CustomerSaveDto customerSaveDto) {
         
@@ -46,8 +48,7 @@ public class CustomerApi {
         }
         
         Customer customer = modelMapper.map(customerSaveDto, Customer.class);
-        // TODO Encrypt password
-        
+        customer.setPassword(passwordEncoder.encode(customer.getPassword()));
         customerDao.save(customer);
         
         log.info("Customer added with {} id", customer.getId());
@@ -75,7 +76,7 @@ public class CustomerApi {
         
         Customer customer = modelMapper.map(customerSaveDto, Customer.class);
         customer.setId(existingCustomer.get().getId());
-        
+        customer.setPassword(passwordEncoder.encode(customer.getPassword()));
         customerDao.save(customer);
         
         return true;

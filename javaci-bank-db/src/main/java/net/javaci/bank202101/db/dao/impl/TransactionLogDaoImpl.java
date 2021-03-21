@@ -1,7 +1,6 @@
 package net.javaci.bank202101.db.dao.impl;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.transaction.Transactional;
 

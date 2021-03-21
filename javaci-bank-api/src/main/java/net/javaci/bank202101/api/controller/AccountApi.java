@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import net.javaci.bank202101.api.dto.AccountListDto;
 import net.javaci.bank202101.api.dto.AccountSaveDto;
@@ -23,6 +25,7 @@ import net.javaci.bank202101.db.model.Account;
 import net.javaci.bank202101.db.model.Customer;
 import net.javaci.bank202101.db.model.enumaration.AccountStatusType;
 
+@Tag(description = "User Bank Accounts API", name = "account-api")
 @Slf4j
 @RestController
 @RequestMapping(AccountApi.API_ACCOUNT_BASE_URL)
@@ -39,6 +42,7 @@ public class AccountApi {
     @Autowired
     private ModelMapper modelMapper;
     
+    @Operation(summary = "listall", description = "Returns list of all accounts")
     @GetMapping("/list")
     public List<AccountListDto> listAll(String citizenNumber){
         
