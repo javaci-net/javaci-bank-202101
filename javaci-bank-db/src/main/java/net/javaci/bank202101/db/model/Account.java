@@ -22,7 +22,7 @@ import net.javaci.bank202101.db.model.enumaration.AccountStatusType;
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 public class Account {
 
-    public Account(Long accountId) {
+    public Account(Long id) {
         this.id = id;
     }
 
@@ -38,7 +38,7 @@ public class Account {
     private Set<TransactionLog> transactions;
     */
     
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String accountNumber;
     
     @Column(nullable = false)

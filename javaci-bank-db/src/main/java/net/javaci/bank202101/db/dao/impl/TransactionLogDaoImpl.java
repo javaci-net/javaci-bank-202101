@@ -1,42 +1,23 @@
 package net.javaci.bank202101.db.dao.impl;
 
 import java.util.List;
+import java.util.Optional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import lombok.extern.slf4j.Slf4j;
-import net.javaci.bank202101.db.dao.TransactionLogDao;
+import net.javaci.bank202101.db.model.Account;
 import net.javaci.bank202101.db.model.TransactionLog;
 
-@Slf4j
 @Transactional
 @Repository
-public class TransactionLogDaoImpl implements TransactionLogDao {
-    
-    @PersistenceContext
-    private EntityManager entityManager;
-    
-    @Override
-    public List<TransactionLog> findByAccountId(Long accountId) {
-        List<TransactionLog> resultList = entityManager
-                .createQuery("from TransactionLog as txn where txn.account.id = ?1")
-                .setParameter(1, accountId)
-                .getResultList();
-        return resultList;
-    }
+public interface TransactionLogDaoImpl extends JpaRepository<TransactionLog, Long> {
 
-    @Override
-    public void save(TransactionLog entity) {
-        if (entity.getId() == null) {
-            entityManager.persist(entity);
-        } else {
-            entityManager.merge(entity);
-            entityManager.flush();
-        }
-    }
-
+    List<TransactionLog> findAllByAccount(Account account);
+    
+    @Query("from TransactionLog as txn where txn.account.id = ?1")
+    List<TransactionLog> findAllByAccountId(Long accountId);
 }

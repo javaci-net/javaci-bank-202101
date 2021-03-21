@@ -11,5 +11,7 @@ public interface AccountDao {
     void save(Account entity);
 
     Optional<Account> findById(Long accountId);
+
+    Account findByAccountNumber(String toAccountNumber);
   
 }

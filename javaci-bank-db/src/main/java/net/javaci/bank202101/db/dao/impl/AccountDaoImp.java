@@ -27,6 +27,7 @@ public class AccountDaoImp implements AccountDao {
             .setParameter(1, customerId)
             .getResultList().size();
     }
+   
 
     @Override
     public void save(Account entity) {
@@ -42,5 +43,14 @@ public class AccountDaoImp implements AccountDao {
     public Optional<Account> findById(Long accountId) {
         Account dbAccount = entityManager.find(Account.class, accountId);
         return Optional.ofNullable(dbAccount);
+    }
+
+
+    @Override
+    public Account findByAccountNumber(String toAccountNumber) {
+        return (Account) entityManager
+            .createQuery("from Account as acc where acc.accountNumber = ?1")
+            .setParameter(1, toAccountNumber)
+            .getSingleResult();
     }
 }

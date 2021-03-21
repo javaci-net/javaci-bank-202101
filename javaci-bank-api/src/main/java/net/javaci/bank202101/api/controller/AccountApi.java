@@ -4,24 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 import lombok.extern.slf4j.Slf4j;
 import net.javaci.bank202101.api.dto.AccountListDto;
 import net.javaci.bank202101.api.dto.AccountSaveDto;
+import net.javaci.bank202101.api.helper.ModelValidationHelper;
 import net.javaci.bank202101.db.dao.AccountDao;
-import net.javaci.bank202101.db.dao.CustomerDao;
 import net.javaci.bank202101.db.model.Account;
 import net.javaci.bank202101.db.model.Customer;
 import net.javaci.bank202101.db.model.enumaration.AccountStatusType;
@@ -34,7 +31,7 @@ public class AccountApi {
     public static final String API_ACCOUNT_BASE_URL = "/api/account";
 
     @Autowired
-    private CustomerDao customerDao;
+    private ModelValidationHelper modelValidationHelper;
     
     @Autowired
     private AccountDao accountDao;
@@ -45,7 +42,7 @@ public class AccountApi {
     @GetMapping("/list")
     public List<AccountListDto> listAll(String citizenNumber){
         
-        Optional<Customer> existingCustomer = findAndCheckCustomer(citizenNumber);
+        Optional<Customer> existingCustomer = modelValidationHelper.findAndCheckCustomer(citizenNumber);
         
         List<AccountListDto> accountListDto = new ArrayList<>();
         Set<Account> dbAccounts = existingCustomer.get().getAccounts();
@@ -70,7 +67,7 @@ public class AccountApi {
             @PathVariable("citizenNumber") String citizenNumber, 
             @RequestBody AccountSaveDto newAccountDto
     ) {
-        Optional<Customer> existingCustomer = findAndCheckCustomer(citizenNumber);
+        Optional<Customer> existingCustomer = modelValidationHelper.findAndCheckCustomer(citizenNumber);
         
         Account dbAccount = modelMapper.map(newAccountDto, Account.class);
         dbAccount.setCustomer(existingCustomer.get());
@@ -89,13 +86,13 @@ public class AccountApi {
     
     @GetMapping("/getInfo")
     public AccountListDto getInfo(Long accountId) {
-        Account dbAccount = findAndCheckAccount(accountId);
+        Account dbAccount = modelValidationHelper.findAndCheckAccount(accountId);
         return convertToDto(dbAccount);
     }
 
     @PostMapping("/close")
     public AccountListDto close(@RequestBody Long accountId) {
-        Account dbAccount = findAndCheckAccount(accountId);
+        Account dbAccount = modelValidationHelper.findAndCheckAccount(accountId);
         dbAccount.setStatus(AccountStatusType.CLOSED);
         accountDao.save(dbAccount);
         return convertToDto(dbAccount);
@@ -110,22 +107,4 @@ public class AccountApi {
         return modelMapper.map(dbAccount, AccountListDto.class);
     }
 
-    private Optional<Customer> findAndCheckCustomer(String citizenNumber) {
-        Optional<Customer> existingCustomer = customerDao.findByCitizenNumber(citizenNumber);
-        if(existingCustomer.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                 "Given citizen number not found " + citizenNumber
-            );
-        }
-        return existingCustomer;
-    }
-    
-    private Account findAndCheckAccount(Long accountId) {
-        Optional<Account> dbAccount = accountDao.findById(accountId);
-        if (dbAccount.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "Given account not found with account id: " + accountId);
-        }
-        return dbAccount.get();
-    }
 }
