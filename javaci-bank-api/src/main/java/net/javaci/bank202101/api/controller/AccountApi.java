@@ -19,6 +19,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import net.javaci.bank202101.api.dto.AccountListDto;
 import net.javaci.bank202101.api.dto.AccountSaveDto;
+import net.javaci.bank202101.api.helper.AccountNumberGenerator;
 import net.javaci.bank202101.api.helper.ModelValidationHelper;
 import net.javaci.bank202101.db.dao.AccountDao;
 import net.javaci.bank202101.db.model.Account;
@@ -78,7 +79,7 @@ public class AccountApi {
         
         Long customerId = existingCustomer.get().getId();
         int existingAccountCount = accountDao.countByCustomerId(customerId);
-        String accountNumber = String.format("%07d-%02d", customerId, existingAccountCount+1 );
+        String accountNumber = AccountNumberGenerator.generateAccountNumber(customerId, existingAccountCount);
         dbAccount.setAccountNumber(accountNumber);
         
         accountDao.save(dbAccount);
