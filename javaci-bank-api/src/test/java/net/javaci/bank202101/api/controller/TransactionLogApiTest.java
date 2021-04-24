@@ -1,6 +1,7 @@
 package net.javaci.bank202101.api.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -15,6 +16,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.AdditionalAnswers;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -32,6 +34,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import net.javaci.bank202101.api.dto.TransferTransactionDto;
 import net.javaci.bank202101.api.helper.ModelValidationHelper;
+import net.javaci.bank202101.db.dao.AccountDao;
 import net.javaci.bank202101.db.dao.impl.TransactionLogDaoImpl;
 import net.javaci.bank202101.db.model.Account;
 import net.javaci.bank202101.db.model.Customer;
@@ -52,6 +55,7 @@ class TransactionLogApiTest {
     
     @MockBean private TransactionLogDaoImpl transactionLogDao; 
     @MockBean private ModelValidationHelper modelValidationHelper;
+    @MockBean private AccountDao accountDao;
     
     @Test
     void testList() throws Exception {
@@ -94,6 +98,7 @@ class TransactionLogApiTest {
             .andDo(print())
             .andExpect(status().isOk())
             .andReturn();
+        
         String resultAsStr = result.getResponse().getContentAsString();
         assertThat(resultAsStr).isEqualTo(
                 expectedJsonResult
@@ -128,8 +133,86 @@ class TransactionLogApiTest {
         perform
             .andDo(print())
             .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
+            .andExpect(status().reason(containsString("Given account is not active")))
             .andReturn();
         
+    }
+    
+    @Test
+    void testTransferFromZeroBalanceAccount() throws Exception {
+        
+        // Given
+        Long accountId = 999L;
+        
+        Account fromAccount = new Account();
+        fromAccount.setId(accountId);
+        fromAccount.setStatus(AccountStatusType.ACTIVE);
+        fromAccount.setBalance(BigDecimal.ZERO);
+        Mockito.when(modelValidationHelper.findAndCheckAccount(any())).thenReturn(fromAccount);
+        
+        TransferTransactionDto transferRequest = new TransferTransactionDto();
+        transferRequest.setAccountId(accountId);
+        transferRequest.setAmount(BigDecimal.TEN);
+        transferRequest.setToAccountNumber("1234567-01");
+        
+        // When
+        ResultActions perform =  this.mockMvc.perform(
+                post(TransactionLogApi.API_TRANSACTION_BASE_URL + "/transfer")
+                .content(new ObjectMapper().writeValueAsString(transferRequest))
+                .contentType(MediaType.APPLICATION_JSON)
+        );
+        
+        // Then
+        perform
+            .andDo(print())
+            .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
+            .andExpect(status().reason(containsString("Given account does not have enough balance")))
+            .andReturn();
+        
+    }
+    
+    @Test
+    void testTransfer() throws Exception {
+        
+        // Given
+        Long accountId = 999L;
+        
+        Account fromAccount = new Account();
+        fromAccount.setId(accountId);
+        fromAccount.setStatus(AccountStatusType.ACTIVE);
+        fromAccount.setBalance(new BigDecimal("1000"));
+        Mockito.when(modelValidationHelper.findAndCheckAccount(any())).thenReturn(fromAccount);
+        Mockito.when(accountDao.findByAccountNumber(any())).thenReturn(fromAccount);
+        Mockito.doNothing().when(accountDao).save(any());
+        Mockito.when(transactionLogDao.save(any(TransactionLog.class))).then(AdditionalAnswers.returnsFirstArg());
+        
+        TransferTransactionDto transferRequest = new TransferTransactionDto();
+        transferRequest.setAccountId(accountId);
+        transferRequest.setAmount(BigDecimal.TEN);
+        transferRequest.setToAccountNumber("1234567-01");
+        
+        String expectedJsonResult = 
+                "{\"id\":null,\"toCustomerName\":null,\"toAccountId\":null,\"amount\":10,\"type\":\"MONEY_TRANSFER\",\"description\":\"\"}";
+        
+        
+        // When
+        ResultActions perform =  this.mockMvc.perform(
+                post(TransactionLogApi.API_TRANSACTION_BASE_URL + "/transfer")
+                .content(new ObjectMapper().writeValueAsString(transferRequest))
+                .contentType(MediaType.APPLICATION_JSON)
+        );
+        
+        // Then
+        MvcResult result = perform
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andReturn();
+        
+        String resultAsStr = result.getResponse().getContentAsString();
+        assertThat(resultAsStr).isEqualTo(
+                expectedJsonResult
+        );
+        assertEquals(expectedJsonResult, resultAsStr);
     }
 
 }
